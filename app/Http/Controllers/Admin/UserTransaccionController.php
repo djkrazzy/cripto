@@ -32,16 +32,53 @@ class UserTransaccionController extends Controller
         $totalRetiros =  $transacciones->where('user_id', auth()->user()->id )
         ->where('status', 'aprobado')->where('operacion', 'retiro')
         ->sum('monto');
+
+        
         ///datables
         if ($request->ajax()) {
-            
-            return Datatables::of($transacciones)
+            $data = Transaccion::with( 'user'  )->select('*')->where('user_id', auth()->user()->id);
+            $status="";
+           
+             
+            return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    $actionBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>
+                    <a href="#" id="edit" value="'. asset( $row->boleta).'" class="edit btn btn-primary btn-sm title="Boleta">
+                    <i class="fa fa-pencil"></i>
+                    </a>
+                    ';
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                
+                ->editColumn('created_at', function ($data) {
+                    return $data->updated_at->format('d/m/Y');
+                })
+                ->filterColumn('created_at', function ($query, $keyword) {
+                    $query->whereRaw("DATE_FORMAT(updated_at,'%d/%m/%Y') like ?", ["%$keyword%"]);
+                })
+
+                ->editColumn('operacion', function ($data) {
+                    if($data->operacion =='deposito'){
+                        return '<small class="text-success mr-1"><i class="fas fa-arrow-up"></i>Deposito</small>';
+                    }else{
+                        return 'small class="text-danger mr-1"><i class="fas fa-arrow-down"></i>Retiro</small>';
+                    }
+                   
+                })
+                ->editColumn('status', function ($data) {
+                   
+                    if($data->status =='pendiente'){
+                        return '<span class="badge badge-warning">Pendiente</span>';
+                    }elseif ($data->status =='pendiente') {
+                        return '<span class="badge badge-success">Aprobado</span>';
+                    }else{
+                        return '<span class="badge badge-danger">Rechazado</span>';
+                    }
+
+                   
+                })
+                ->rawColumns(['status','operacion','action'])
                 ->make(true);
         }
 
@@ -110,7 +147,11 @@ class UserTransaccionController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (request()->ajax()) {
+            $data = Transaccion::findOrFail($id);
+            return response()->json($data);
+        }
+      return 'show boletas';
     }
 
     /**

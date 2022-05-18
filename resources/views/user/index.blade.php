@@ -233,31 +233,7 @@ ffdfdfd
 </tr>
 </thead>
 <tbody>
-    @foreach($transacciones as $transaccion)
-    <tr>
-    @if($transaccion->operacion =='deposito')
-    <td><small class="text-success mr-1"><i class="fas fa-arrow-up"></i>Deposito</small></td>
-@else
-<td><small class="text-danger mr-1"><i class="fas fa-arrow-down"></i>Retiro</small></td>
-@endif
-<td>{{$transaccion->monto }}</td>
-<td>{{$transaccion->numero }}</td>
-<td>  <button class="btn btn-primary">Boleta</button></td>
-<td>{{$transaccion->user->name }}</td>
-<td>{{$transaccion->created_at }}</td>
-
-@if($transaccion->status =='pendiente')
-<td> <span class="badge badge-warning">Pendiente</span></td>
-@elseif($transaccion->status =='aprobado')
-<td>  <span class="badge badge-success">Aprobado</span></td>
-@else
-<td> <span class="badge badge-danger">Rechazado</span></td>
-@endif
-
-
-</tr>
-
-    @endforeach
+ 
 
 
 </tbody>
@@ -352,6 +328,7 @@ ffdfdfd
 </div>
 
 </div>
+</div>
 <!--     fin      modal      deposito                -->
 
 
@@ -409,7 +386,29 @@ deposito bitcoin
 
 </div>
 <!--     fin      modal      retiro                -->
-
+  <!-- Modal boleta -->
+  <div class="modal fade" id="boleta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            <i class="fa fa-user"></i> Nuevo persona
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <img id="imagen_boleta" src="{{ Storage::url( '')}}" alt="" class="image ">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa fa-times"></i> Close</button>
+                        <button type="button" class="btn btn-primary" id="btnGuardar">
+                            <i class="fa fa-cloud-download-alt"></i> Guardar</button>
+                          
+                    </div>
+                </div>
+            </div>
+        </div>
 
 @stop
 
@@ -435,6 +434,9 @@ deposito bitcoin
   var table = $('#example1').DataTable({
         processing: true,
         serverSide: true,
+        "lengthChange": false, "autoWidth": false,
+        dom: 'Bfrtip',
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
         ajax: "{{ route('user.usertransacciones.index') }}",
         columns: [
             {data: 'operacion', name: 'operacion'},
@@ -446,12 +448,13 @@ deposito bitcoin
                 orderable: true, 
                 searchable: true
             },
-            {data: 'user_id', name: 'user_id'},
+            {data: 'user.name', name: 'user.name'},
             {data: 'created_at', name: 'created_at'},
             {data: 'status', name: 'status'},
            
         ]
-    });
+     
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');;
 
 
 
@@ -488,6 +491,21 @@ deposito bitcoin
               };
               reader.readAsDataURL(file);
            }
+
+
+           ///modal boleta
+
+
+           $(document).on("click", "#edit", function (e) {
+    let idEditar = $(this).attr("value");
+    
+            $("#boleta").modal("show");//abro el modal
+            $("#imagen_boleta").attr("src",idEditar);
+
+       
+    
+    e.preventDefault();
+});
 </script>
 
 @if (session('info'))
