@@ -66,6 +66,10 @@ class User extends Authenticatable
         return $this->hasOne(Cuenta::class);
     }
 
+    public function cureferencia(){
+        return $this->hasOne(Referencias::class);
+    }
+
     public function transaccion(){
         return $this->hasMany(Transaccion::class);
     }

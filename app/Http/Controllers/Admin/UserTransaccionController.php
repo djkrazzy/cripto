@@ -10,6 +10,7 @@ use App\Models\Transaccion;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\TransaccionRecibidaMailable;
 use Illuminate\Support\Facades\Mail;
+use DataTables;
 use Auth;
 class UserTransaccionController extends Controller
 {
@@ -18,10 +19,10 @@ class UserTransaccionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $transacciones= Transaccion::where('user_id',auth()->user()->id )->get();
-
+// modificar
         $user= User::find(auth()->user()->id );
 
         $totalDepositos =  $transacciones->where('user_id', auth()->user()->id )
@@ -31,7 +32,20 @@ class UserTransaccionController extends Controller
         $totalRetiros =  $transacciones->where('user_id', auth()->user()->id )
         ->where('status', 'aprobado')->where('operacion', 'retiro')
         ->sum('monto');
-    
+        ///datables
+        if ($request->ajax()) {
+            
+            return Datatables::of($transacciones)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        //datables
 
         return view('user.index',compact('transacciones','user','totalDepositos','totalRetiros') );
     }

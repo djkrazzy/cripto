@@ -74,6 +74,26 @@ class HomeController extends Controller
        
         ///Mail::to(Auth::user()->email)->send($recibida) ;
 
-      // return redirect()->route('user.usertransacciones.index')->with('info', 'Informacion enviada con éxito');
+     
     }
+
+    public function login(Request $request){
+
+
+
+        $remember=  $request->filled('remember');
+        $credenciales = $request->validate([
+         
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+        //$credenciales = $request->only('email', 'password') ;
+        $request->session()->regenerate();
+       if( Auth::attempt($credenciales,$remember) ){
+           return redirect('/admin');
+       }  
+       return redirect()->intended('ingreso')->with('info','usuario o contraseña no coinciden');
+    }
+
+   
 }

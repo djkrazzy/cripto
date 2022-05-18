@@ -303,7 +303,7 @@ ffdfdfd
         <div class="card-body">
         <div class="form-group">
         <label for="exampleInputEmail1">Numero de Boleta</label>
-        <input type="text" class="form-control" id="numero" name="numero" placeholder="ingrese el numero" required>
+        <input type="text" class="form-control" id="numero" name="numero" value="{{ old('numero')}}" placeholder="ingrese el numero" required>
          @error('numero')
              <small class="text-danger">  {{ $message}} </small>
          @enderror
@@ -424,12 +424,34 @@ deposito bitcoin
   
     <script>
   $(function () {
-    $("#example1").DataTable({
+    $("#example2").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
   });
+
+
+  var table = $('#example1').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('user.usertransacciones.index') }}",
+        columns: [
+            {data: 'operacion', name: 'operacion'},
+            {data: 'monto', name: 'monto'},
+            {data: 'numero', name: 'numero'},
+            {
+                data: 'action', 
+                name: 'action', 
+                orderable: true, 
+                searchable: true
+            },
+            {data: 'user_id', name: 'user_id'},
+            {data: 'created_at', name: 'created_at'},
+            {data: 'status', name: 'status'},
+           
+        ]
+    });
 
 
 

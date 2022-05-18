@@ -61,13 +61,19 @@
 									<li><a href="team.html">Team</a></li>
 									<li></li>
 								</ul>
+								@guest
 							</div>
 							<div class="login-box text-right">
 								<a href="{{route('ingreso')}}" class="button">Ingreso</a>
-							
 							</div>
-							
 						</div>
+								@else
+							</div>
+							<div class="login-box text-right">
+								<a href="/admin" class="button">Mi Cuenta</a>
+							</div>
+						</div>
+						@endguest
 					</div>
 				</div>
 			</div>

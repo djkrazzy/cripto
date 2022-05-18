@@ -38,14 +38,7 @@ Route::get('/registro', [HomeController::class, 'registro'])->name('registro');
 
 Route::post('/registro/store', [HomeController::class, 'store'])->name('registro.store');
 
-Route::post('/ingreso', function () {
-    $credenciales = request()->only('email', 'password') ;
-     request()->session()->regenerate();
-   if( Auth::attempt($credenciales) ){
-       return redirect('/admin');
-   }  
-   return redirect('ingreso');
-});
+Route::post('/ingreso', [HomeController::class, 'login']);
 
 
 Route::get('transaccionRecibida', function(){
