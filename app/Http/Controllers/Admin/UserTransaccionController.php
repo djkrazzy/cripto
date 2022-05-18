@@ -44,7 +44,7 @@ class UserTransaccionController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
                     $actionBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>
-                    <a href="#" id="edit" value="'. asset( $row->boleta).'" class="edit btn btn-primary btn-sm title="Boleta">
+                    <a href="#" id="edit" value="'. Storage::url($row->boleta).'" class="edit btn btn-primary btn-sm title="Boleta">
                     <i class="fa fa-pencil"></i>
                     </a>
                     ';
@@ -114,9 +114,14 @@ class UserTransaccionController extends Controller
         //return $request->file('file');
         $recibida= new TransaccionRecibidaMailable($request->all());
         //return $request->all();
+        $real=$request->file->getClientOriginalName();
        $transacion= Transaccion::create($request->all()) ;
         if($request->file('file')){
-            $url= Storage::put('public/boletas',$request->file('file'));
+           // $url= Storage::put('public/boletas',$request->file('file'));
+           $file = $request->file('file');
+            $url=Storage::put('public/boletas',$file);
+
+            
             $transacion->boleta = $url;
 
             $transacion->save();
