@@ -387,28 +387,33 @@ deposito bitcoin
 </div>
 <!--     fin      modal      retiro                -->
   <!-- Modal boleta -->
-  <div class="modal fade" id="boleta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">
-                            <i class="fa fa-user"></i> Nuevo persona
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                    <img id="imagen_boleta" src="{{ Storage::url( '')}}" alt="" class="image ">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fa fa-times"></i> Close</button>
-                        <button type="button" class="btn btn-primary" id="btnGuardar">
-                            <i class="fa fa-cloud-download-alt"></i> Guardar</button>
-                          
-                    </div>
-                </div>
-            </div>
-        </div>
+
+
+  <div class="modal fade" id="boleta">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+     <div class="modal-header ">
+    <h4 class="modal-title">Imagen de Boleta</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+        <img id="imagen_boleta" src="{{ Storage::url( '')}}" alt=""  class="img-fluid pad">
+    </div>
+    <div class="modal-footer justify-content-between">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  
+    </div>
+    </div>
+    
+    </div>
+    
+    </div>
+
+
+
+ 
 
 @stop
 
@@ -417,18 +422,12 @@ deposito bitcoin
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
+    
 
     <script type=”module” src="{{ asset('js/clipboard.js') }}" type="text/javascript"></script>
   
     <script>
-  $(function () {
-    $("#example2").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-  });
+ 
 
 
   var table = $('#example1').DataTable({
@@ -504,7 +503,7 @@ deposito bitcoin
 
        
     
-    e.preventDefault();
+  
 });
 </script>
 

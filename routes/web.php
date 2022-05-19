@@ -31,7 +31,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-
+Route::get('/tranacciones', [HomeController::class, 'index'])->name('transaccion.index');
 Route::get('/ingreso', [HomeController::class, 'ingreso'])->name('ingreso');
 
 Route::get('/registro', [HomeController::class, 'registro'])->name('registro');
