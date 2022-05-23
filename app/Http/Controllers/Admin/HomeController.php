@@ -14,8 +14,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Facades\Auth;
+
 use DataTables;
-use Auth;
 class HomeController extends Controller
 {
 
@@ -62,7 +63,7 @@ class HomeController extends Controller
                    
                     if($data->status =='pendiente'){
                         return '<span class="badge badge-warning">Pendiente</span>';
-                    }elseif ($data->status =='pendiente') {
+                    }elseif ($data->status =='aprobado') {
                         return '<span class="badge badge-success">Aprobado</span>';
                     }else{
                         return '<span class="badge badge-danger">Rechazado</span>';

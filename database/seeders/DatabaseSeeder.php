@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         Storage::deleteDirectory('public/dpi');
          Storage::makeDirectory('public/dpi');
+
+        $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
         Cuenta::factory(99)->create();
         Transaccion::factory(200)->create();

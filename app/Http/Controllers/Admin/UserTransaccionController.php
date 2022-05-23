@@ -10,8 +10,15 @@ use App\Models\Transaccion;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\TransaccionRecibidaMailable;
 use Illuminate\Support\Facades\Mail;
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Str;
+
+//use Yajra\Datatables\Facades\Datatables;
+
+use Illuminate\Support\Facades\Auth;
+
 use DataTables;
-use Auth;
+//use Auth;
 class UserTransaccionController extends Controller
 {
     /**
@@ -43,9 +50,9 @@ class UserTransaccionController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>
-                    <a href="#" id="edit" value="'. Storage::url($row->boleta).'" class="edit btn btn-primary btn-sm title="Boleta">
-                    <i class="fa fa-pencil"></i>
+                    $actionBtn = '
+                    <a href="#" id="edit" value="'.asset("images/boletas/".  $row->boleta ) .'" class="edit btn btn-primary btn-sm title="Boleta">
+                    <i class="fa fa-pencil"></i>Boleta
                     </a>
                     ';
                     return $actionBtn;
@@ -62,7 +69,15 @@ class UserTransaccionController extends Controller
                     if($data->operacion =='deposito'){
                         return '<small class="text-success mr-1"><i class="fas fa-arrow-up"></i>Deposito</small>';
                     }else{
-                        return 'small class="text-danger mr-1"><i class="fas fa-arrow-down"></i>Retiro</small>';
+                        return '<small class="text-danger mr-1"><i class="fas fa-arrow-down"></i>Retiro</small>';
+                    }
+                   
+                })
+                ->editColumn('tipo', function ($data) {
+                    if($data->tipo =='deposito'){
+                        return '<small class="text-primary mr-1">Bancaria</small>';
+                    }else{
+                        return '<small class="text-info mr-1">Bitcoin</small>';
                     }
                    
                 })
@@ -70,7 +85,7 @@ class UserTransaccionController extends Controller
                    
                     if($data->status =='pendiente'){
                         return '<span class="badge badge-warning">Pendiente</span>';
-                    }elseif ($data->status =='pendiente') {
+                    }elseif ($data->status =='aprobado') {
                         return '<span class="badge badge-success">Aprobado</span>';
                     }else{
                         return '<span class="badge badge-danger">Rechazado</span>';
@@ -78,7 +93,7 @@ class UserTransaccionController extends Controller
 
                    
                 })
-                ->rawColumns(['status','operacion','action'])
+                ->rawColumns(['status','operacion','action','tipo'])
                 ->make(true);
         }
 
@@ -105,10 +120,12 @@ class UserTransaccionController extends Controller
      */
     public function store(Request $request)
     { 
+
+       // return $request->all();
         // 'monto'=>'required|unique::categorie'
         $request->validate([
             'monto'=>'required',
-            'file' =>'image'
+            'file' => 'image|required|mimes:jpeg,png,jpg,gif,svg'
         ]);
        // return  Storage::put('public/boletas',$request->file('file'));
         //return $request->file('file');
@@ -116,16 +133,30 @@ class UserTransaccionController extends Controller
         //return $request->all();
         $real=$request->file->getClientOriginalName();
        $transacion= Transaccion::create($request->all()) ;
-        if($request->file('file')){
-           // $url= Storage::put('public/boletas',$request->file('file'));
-           $file = $request->file('file');
-            $url=Storage::put('public/boletas',$file);
+      
+       
+        //$random = str_random(20);
 
+
+
+          // script para subir la imagen
+       
+
+
+
+        if($request->hasFile('file')){
             
-            $transacion->boleta = $url;
+            $imagen        = $request->file("file");
+            $random  = Str::random(15);
+            $nombreimagen  = $random. Str::slug($request->numero).".".$imagen->guessExtension();
+            //$nombreimagen= $imagen->getClientOriginalName();
+            $ruta = "images/boletas/".  $nombreimagen ;
+            Image::make($imagen->getRealPath())->save($ruta);
+            //$model->foto  = $nombreimagen; // asignar el nombre para guardar
+            $transacion->boleta = $nombreimagen;
 
             $transacion->save();
-        }
+           }
        
        
         Mail::to(Auth::user()->email)->send($recibida) ;

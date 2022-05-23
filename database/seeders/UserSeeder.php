@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -22,7 +23,7 @@ class UserSeeder extends Seeder
                 'email' => 'infovideogala@gmail.com',
                 'password' => bcrypt('academia0312'), 
             ]
-        );
+        )->assignRole('Admin');
         User::factory(99)->create();
     }
 }

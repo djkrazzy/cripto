@@ -2,6 +2,8 @@
 use App\Http\Controllers\Admin\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Mail\TransaccionRecibidaMailable;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\TransaccionesController;
 use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +41,13 @@ Route::get('/registro', [HomeController::class, 'registro'])->name('registro');
 Route::post('/registro/store', [HomeController::class, 'store'])->name('registro.store');
 
 Route::post('/ingreso', [HomeController::class, 'login']);
+///paginas de usuario
+
+Route::get('/user/configuracion', [PageController::class, 'configuracion'])->name('user.configuracion');
+
+Route::get('/user/confirmacion', [PageController::class, 'confirmacion'])->name('user.confirmacion');
+Route::get('/user/cuenta', [PageController::class, 'cuenta'])->name('user.cuenta');
+Route::get('/notificationes', [TransaccionesController::class, 'getNotificationsData'])->name('notificationes');
 
 
 Route::get('transaccionRecibida', function(){

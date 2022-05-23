@@ -24,7 +24,7 @@ class CuentaFactory extends Factory
         return [
              'name' => $this->faker->unique()->word(10),
              'user_id' => User::all()->random()->id,
-             'saldo' => number_format( $monto, 2),
+             'saldo' => 0,
         ];
     }
 }

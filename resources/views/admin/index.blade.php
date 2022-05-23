@@ -108,6 +108,8 @@
   var table = $('#example1').DataTable({
         processing: true,
         serverSide: true,
+        "autoWidth": false,
+      "responsive": true,
         "lengthChange": false, "autoWidth": false,
         dom: 'Bfrtip',
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
