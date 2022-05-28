@@ -20,13 +20,14 @@ return new class extends Migration
             $table->string('photo_recibo', 2048)->nullable();
             $table->string('photo_selfie', 2048)->nullable();
             $table->string('numero_cuenta_banco')->nullable();
+            $table->string('tipo_cuenta')->nullable();
             $table->string('banco')->nullable();
             $table->string('bitcoin')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name_emergency')->nullable();
             $table->string('tel_emergency')->nullable();
-            $table->enum('status',['pendiente','aprobado'])->default('pendiente');
+            $table->enum('status',['pendiente','aprobado','enviado'])->default('pendiente');
             $table->timestamps();
         });
     }

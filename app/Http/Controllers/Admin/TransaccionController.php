@@ -81,7 +81,15 @@ class TransaccionController extends Controller
           $transaccione->status =  $request->status;
           $transaccione->save() ;
            
-          $nuevo_saldo= $cuenta->saldo+$transaccione->monto;
+          $nuevo_saldo="";
+
+          if($request->operacion =='deposito'){
+            $nuevo_saldo= $cuenta->saldo+$transaccione->monto;
+          }  else{
+            $nuevo_saldo= $cuenta->saldo-$transaccione->monto;
+          }
+
+         
 
           $cuenta->saldo= $nuevo_saldo;
           $cuenta->save() ;

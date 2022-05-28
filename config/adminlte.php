@@ -232,10 +232,10 @@ return [
             'type'         => 'navbar-notification',
             'id'           => 'my-notification',
             'icon'         => 'fas fa-bell',
-            'url'          => '/admin',
+            'url'          => '#',
             'topnav_right' => true,
-            'dropdown_mode'   => false,
-            'dropdown_flabel' => 'All notifications',
+            'dropdown_mode'   => true,
+            'dropdown_flabel' => 'Notificaciones',
             'update_cfg'   => [
                 'url' => 'notificationes',
                 'period' => 30,

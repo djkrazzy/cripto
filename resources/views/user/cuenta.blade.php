@@ -9,29 +9,37 @@
 @section('content')
    
 <div class="card">
-    <form>
+    {!! Form::model($user,['route' => 'cuenta.update', 'autocomplete'=> 'off']) !!}
         <div class="card-body">
         <div class="form-group">
         <label for="exampleInputEmail1"># de cuenta bancaria</label>
-        <input type="text" class="form-control" id="numero_cuenta_banco" name="numero_cuenta_banco" placeholder="numero de cuenta para recibir depositos">
+      
+
+       {!! Form::text('numero_cuenta_banco', $user->referencia->numero_cuenta_banco, ['class' => 'form-control','placeholder' => 'Numero de cuenta para recibir depositos'])  !!}
         </div>
 
         <div class="form-group">
-            <label for="exampleInputPassword1">Sleccione Banco</label>
-                 <select name="banco" id="banco" class="form-control">
-                    <option value="Ninguno">Ninguno</option>
-                   <option value="BI">Banco Industrial</option>
-                   <option value="Banrural">Banrural</option>
-                   <option value="GYT">GYT</option>
-                   <option value="BAC">BAC</option>
-                   <option value="BAM">BAM</option>
-
-                 </select>
+            <label for="exampleInputPassword1">El nombre del banco</label>
+          
+          
+             {!! Form::text('banco', $user->referencia->banco, ['class' => 'form-control','placeholder' => 'Nombre del banco para recibir transacciones'])  !!}
+               
             </div>
+
+            <div class="form-group">
+                <label for="exampleInputPassword1">Sleccione Tipo de Cuenta</label>
+                {!! Form::select('tipo_cuenta', ['Ninguno' => 'Ninguno',
+                 'Monetaria' => 'Monetaria',
+                 'Ahorro' => 'Ahorro'
+                ],
+                $user->referencia->tipo_cuenta, ['class' => 'form-control']);  !!}
+                   
+                </div>
        <hr>
         <div class="form-group">
         <label for="exampleInputPassword1">E-wallet de BTC</label>
-        <input type="text" class="form-control" id="ewallet" name="ewallet"  placeholder=" Ewalet para recibir transacciones" >
+      
+       {!! Form::text('bitcoin', $user->referencia->bitcoin, ['class' => 'form-control','placeholder' => 'Ewalet para recibir transacciones'])  !!}
         </div>
         
        
@@ -43,7 +51,7 @@
         <div class="card-footer">
         <button type="submit" class="btn bg-primary">Guardar Cambios</button>
         </div>
-     </form>
+        {!! Form::close() !!}
  </div>
 
    

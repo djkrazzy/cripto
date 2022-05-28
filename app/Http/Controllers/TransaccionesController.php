@@ -7,6 +7,7 @@ use App\Models\Transaccion;
 use App\Mail\TransaccionRecibidaMailable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TransaccionesController extends Controller
 {
@@ -112,6 +113,15 @@ class TransaccionesController extends Controller
     public function getNotificationsData(Request $request)
 {
 
+
+    $consulta= Transaccion::where('status','pendiente')->get();
+
+    $users = DB::table('referencias')->where([
+        ['photo_dpi_front', '!=', NULL],
+        ['photo_dpi_back', '!=', NULL],
+    ])->get();
+
+
    
     // For the sake of simplicity, assume we have a variable called
     // $notifications with the unread notifications. Each notification
@@ -125,13 +135,13 @@ class TransaccionesController extends Controller
     $notifications = [
         [
             'icon' => 'fas fa-fw fa-envelope',
-            'text' => rand(0, 10) . ' new messages',
+            'text' => count($consulta) . 'Transacciones',
             'time' => rand(0, 10) . ' minutes',
         ],
         [
             'icon' => 'fas fa-fw fa-users text-primary',
-            'text' => rand(0, 10) . ' friend requests',
-            'time' => rand(0, 60) . ' minutes',
+            'text' => count($users) . ' friend requests',
+            'time' => count($users) . ' minutes',
         ],
         [
             'icon' => 'fas fa-fw fa-file text-danger',
@@ -144,26 +154,20 @@ class TransaccionesController extends Controller
 
     $dropdownHtml = '';
 
-    foreach ($notifications as $key => $not) {
-        $icon = "<i class='mr-2 {$not['icon']}'></i>";
+    $total=count($users)+count($consulta);
 
-        $time = "<span class='float-right text-muted text-sm'>
-                   {$not['time']}
-                 </span>";
+    $dropdownHtml .= "<a href='#' class='dropdown-item'>
+    <i class='mr-2 fas fa-fw fa-file text-danger'>".count($consulta)."</i>Transacciones
+  </a>";
 
-        $dropdownHtml .= "<a href='#' class='dropdown-item'>
-                            {$icon}{$not['text']}{$time}
-                          </a>";
-
-        if ($key < count($notifications) - 1) {
-            $dropdownHtml .= "<div class='dropdown-divider'></div>";
-        }
-    }
+  $dropdownHtml .= "<a href='/admin' class='dropdown-item'>
+  <i class='mr-2 fas fa-fw fa-file text-danger'> ".count($users)."</i>DPIS
+</a>";
 
     // Return the new notification data.
-    $consulta= Transaccion::where('status','pendiente')->get();
+    
     return [
-        'label'       => count($consulta),
+        'label'       => $total,
         'label_color' => 'danger',
         'icon_color'  => 'dark',
         'dropdown'    => $dropdownHtml,

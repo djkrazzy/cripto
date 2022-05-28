@@ -23,6 +23,7 @@
 <table id="example1" class="table table-bordered table-striped">
 <thead>
 <tr>
+  <th>Operación</th>
 <th>Tipo</th>
 <th>Monto</th>
 <th># Transaccion</th>
@@ -39,6 +40,7 @@
 </tbody>
 <tfoot>
 <tr>
+  <th>Operación</th>
 <th>Tipo</th>
 <th>Monto</th>
 <th># Transaccion</th>
@@ -67,13 +69,14 @@
       </div>
       <div class="modal-body">
     <div class="modal-body">
-    <p>esta seguro de aprobar la transacción?&hellip;</p>
+    <p>¿esta seguro de aprobar la transacción?&hellip;</p>
     <form action="" id="form-actualizar" method="POST">
   
   @csrf
   {{ method_field('PUT') }}
     <input type="hidden"  name="status" value="aprobado"  >
     <input type="hidden"  name="cuenta_id"  id="cuenta_id" value=""  >
+    <input type="hidden"  name="operacion"  id="operacion" value=""  >
     <img id="imagen_boleta" src="{{ Storage::url( '')}}" alt=""  class="img-fluid pad">
     <div class="card">
       <button type="submit" class="btn bg-success ">Enviar</button>
@@ -115,7 +118,8 @@
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
         ajax: "{{ route('transaccion.index') }}",
         columns: [
-            {data: 'operacion', name: 'operacion'},
+          {data: 'operacion', name: 'operacion'},
+            {data: 'tipo', name: 'tipo'},
             {data: 'monto', name: 'monto'},
             {data: 'numero', name: 'numero'},
             {
@@ -138,12 +142,13 @@ $(document).on("click", "#edit", function (e) {
     let boleta = $(this).attr("value");
     let ruta = $(this).attr("ruta");
     let cuenta_id = $(this).attr("cuenta_id");
+    let operacion = $(this).attr("operacion");
     
             $("#boleta").modal("show");//abro el modal
             $("#imagen_boleta").attr("src",boleta);
             $("#form-actualizar").attr("action",ruta);
             $("#cuenta_id").val(cuenta_id);
-    
+            $("#operacion").val(operacion);
   
                 });
 </script>

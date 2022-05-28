@@ -17,12 +17,10 @@ class ReferenciasFactory extends Factory
     public function definition()
     {
         return [
-            'photo_dpi_front'=> 'dpi/'.$this->faker->image('public/storage/dpi',640,480,null,false),
-            'photo_dpi_back'=> 'dpi/'.$this->faker->image('public/storage/dpi',640,480,null,false),
-            'photo_selfie'=> 'dpi/'.$this->faker->image('public/storage/dpi',640,480,null,false),
+           
             'name_emergency' => $this->faker->name(),
             'tel_emergency' => $this->faker->phoneNumber,
-            'status' => $this->faker->randomElement(['pendiente','aprobado']),
+            'status' => $this->faker->randomElement(['pendiente','aprobado','enviado']),
             'user_id' => User::all()->random()->id,
         ];
     }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Referencias;
 use App\Models\Cuenta;
 use App\Http\Requests\StoreCuentaRequest;
 use App\Http\Requests\UpdateCuentaRequest;
+use Illuminate\Http\Request;
 
 class CuentaController extends Controller
 {
@@ -68,9 +70,18 @@ class CuentaController extends Controller
      * @param  \App\Models\Cuenta  $cuenta
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCuentaRequest $request, Cuenta $cuenta)
+    public function update(Request $request)
     {
-        //
+       
+        $cuenta= Referencias::where('user_id',auth()->user()->id )->first();
+        $cuenta->numero_cuenta_banco= $request->numero_cuenta_banco;
+        $cuenta->banco= $request->banco;
+        $cuenta->tipo_cuenta= $request->tipo_cuenta;
+        $cuenta->bitcoin= $request->bitcoin;
+ 
+        $cuenta->save();
+       
+       return redirect()->route('user.cuenta')->with('info', 'Informacion enviada con éxito');
     }
 
     /**

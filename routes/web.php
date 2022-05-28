@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Mail\TransaccionRecibidaMailable;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TransaccionesController;
+use App\Http\Controllers\ReferenciasController;
+use App\Http\Controllers\CuentaController;
 use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
@@ -28,19 +30,20 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
+    Route::get('/admin', function () {
+        return view('admin.user.index');
     })->name('dashboard');
 });
 
 Route::get('/tranacciones', [HomeController::class, 'index'])->name('transaccion.index');
 Route::get('/ingreso', [HomeController::class, 'ingreso'])->name('ingreso');
+Route::post('/ingreso', [HomeController::class, 'login']);
 
 Route::get('/registro', [HomeController::class, 'registro'])->name('registro');
 
 Route::post('/registro/store', [HomeController::class, 'store'])->name('registro.store');
 
-Route::post('/ingreso', [HomeController::class, 'login']);
+
 ///paginas de usuario
 
 Route::get('/user/configuracion', [PageController::class, 'configuracion'])->name('user.configuracion');
@@ -55,3 +58,12 @@ Route::get('transaccionRecibida', function(){
 
     return "mensaje enviado";
 } );
+
+
+//enviar documentos
+
+Route::post('/referencias/store', [ReferenciasController::class, 'store'])->name('referencias.store');
+Route::post('/referencias/emergencia', [ReferenciasController::class, 'emergencia'])->name('referencias.emergencia');
+
+///datos bancarios de cuenta
+Route::post('/cuenta/update', [CuentaController::class, 'update'])->name('cuenta.update');

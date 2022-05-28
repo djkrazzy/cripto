@@ -8,6 +8,7 @@ use App\Models\Transaccion;
 
 use App\Models\User;
 use App\Models\Cuenta;
+use App\Models\Referencias;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -36,9 +37,9 @@ class HomeController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>
-                    <a href="#" id="edit" cuenta_id="'.$row->cuenta_id.'" value="'. Storage::url($row->boleta).'" ruta="'.route('admin.transacciones.update',$row->id).'"  class="edit btn btn-primary btn-sm title="Boleta">
-                    <i class="fa fa-pencil"></i>
+                    $actionBtn = '
+                    <a href="#" id="edit" cuenta_id="'.$row->cuenta_id.'" ruta="'.route('admin.transacciones.update',$row->id).'"  value="'.asset("images/boletas/".  $row->boleta ) .'" class="edit btn btn-primary btn-sm title="Boleta" operacion="'.$row->operacion.'">
+                    <i class="fa fa-pencil"></i> Boleta
                     </a>
                     ';
                     return $actionBtn;
@@ -55,7 +56,7 @@ class HomeController extends Controller
                     if($data->operacion =='deposito'){
                         return '<small class="text-success mr-1"><i class="fas fa-arrow-up"></i>Deposito</small>';
                     }else{
-                        return 'small class="text-danger mr-1"><i class="fas fa-arrow-down"></i>Retiro</small>';
+                        return '<small class="text-danger mr-1"><i class="fas fa-arrow-down"></i>Retiro</small>';
                     }
                    
                 })
@@ -71,7 +72,15 @@ class HomeController extends Controller
 
                    
                 })
-                ->rawColumns(['status','operacion','action'])
+                ->editColumn('tipo', function ($data) {
+                    if($data->tipo =='deposito'){
+                        return '<small class="text-primary mr-1">Bancaria</small>';
+                    }else{
+                        return '<small class="text-info mr-1">Bitcoin</small>';
+                    }
+                   
+                })
+                ->rawColumns(['status','operacion','action','tipo'])
                 ->make(true);
         }
 
@@ -114,6 +123,14 @@ class HomeController extends Controller
         'name' =>  Hash::make($user->id),
         'user_id' => $user->id,
         'saldo' => '0',
+  
+
+     ]);
+
+     Referencias::create([
+        
+        'user_id' => $user->id,
+        'status' => 'pendiente',
   
 
      ]);
